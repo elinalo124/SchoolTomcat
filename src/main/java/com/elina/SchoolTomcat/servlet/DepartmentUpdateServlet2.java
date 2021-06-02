@@ -13,13 +13,14 @@ import javax.persistence.EntityManager;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet("/SaveServlet")
-public class DepartmentCreateServlet extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+@WebServlet("/DepartmentUpdateServlet2")
+public class DepartmentUpdateServlet2 extends HttpServlet {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
         PrintWriter out=response.getWriter();
 
-        int id = Integer.parseInt(request.getParameter("id"));
+        String sid=request.getParameter("id");
+        int id=Integer.parseInt(sid);
         String name=request.getParameter("name");
 
         Department department=new Department();
@@ -27,17 +28,13 @@ public class DepartmentCreateServlet extends HttpServlet {
         department.setName(name);
 
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
-
         DepartmentServiceImpl departmentService = new DepartmentServiceImpl(em);
-        int status=departmentService.saveDepartment(department);
-        em.close();
+        int status=departmentService.updateDepartmentByID(id,name);
 
         if(status>0){
-            out.print("<p>Record saved successfully!</p>");
-            //request.getRequestDispatcher("index.html").include(request, response);
-            out.println("<a href='index.jsp'>Add New Department</a>");
+            response.sendRedirect("DepartmentRetrieveServlet");
         }else{
-            out.println("Sorry! unable to save record");
+            out.println("Sorry! unable to update record");
         }
 
         out.close();

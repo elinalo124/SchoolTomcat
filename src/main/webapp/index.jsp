@@ -16,7 +16,7 @@
 </form>
 
 <br/>
-<a href="RetrieveDepartmentServlet">view departments</a>
+<a href="DepartmentRetrieveServlet">view departments</a>
 
 </body>
 </html>

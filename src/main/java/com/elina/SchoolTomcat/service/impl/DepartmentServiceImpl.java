@@ -49,13 +49,23 @@ public class DepartmentServiceImpl implements DepartmentService {
         return departmentDAOImpl.retrieveDepartmentByName(name);
     }
     /*-----UPDATE-----*/
-    public void updateDepartment(Department department)
+    public int updateDepartment(Department department)
     {
         departmentDAOImpl.updateElement(department);
+        return 1;
+    }
+    public int updateDepartmentByID(int id, String name) {
+        departmentDAOImpl.updateElementByID(id,name);
+        return 1;
     }
     /*-----DELETE-----*/
     public void deleteDepartment(Department department)
     {
+        departmentDAOImpl.deleteElement(department);
+    }
+    public void deleteDepartmentByID(int id)
+    {
+        Department department = departmentDAOImpl.retrieveElementByID(id).get();
         departmentDAOImpl.deleteElement(department);
     }
     /*-----OTHER-----*/
@@ -63,5 +73,6 @@ public class DepartmentServiceImpl implements DepartmentService {
     {
         departmentDAOImpl.addCourse(id,course);
     }
+
 
 }

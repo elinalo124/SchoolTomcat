@@ -14,13 +14,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 
-@WebServlet("/RetrieveDepartmentServlet")
+@WebServlet("/DepartmentRetrieveServlet")
 public class DepartmentRetrieveServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         response.setContentType("text/html");
         PrintWriter out=response.getWriter();
-        out.println("<a href='index.html'>Add New Employee</a>");
+        out.println("<a href='index.jsp'>Add New Department</a>");
         out.println("<h1>Department List</h1>");
 
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
@@ -31,7 +31,10 @@ public class DepartmentRetrieveServlet extends HttpServlet {
         out.print("<table border='1' width='100%'");
         out.print("<tr><th>Id</th><th>Name</th>");
         for(Department department:listDep){
-            out.print("<tr><td>"+department.getId()+"</td><td>"+department.getName());
+            out.print("<tr><td>"+department.getId()+"</td><td>"+department.getName()+
+                    "</td><td><a href='DepartmentUpdateServlet?id="+department.getId()+
+                    "'>edit</a></td><td><a href='DepartmentDeleteServlet?id="+department.getId()+
+                    "'>delete</a></td></tr>");
         }
         out.print("</table>");
 

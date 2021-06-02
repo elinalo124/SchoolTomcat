@@ -14,7 +14,7 @@ public interface DepartmentService {
     List<Department> retrieveAllDepartments();
     Optional<Department> retrieveDepartmentByID (int id);
     /*-----UPDATE-----*/
-    void updateDepartment(Department department);
+    int updateDepartment(Department department);
     /*-----DELETE-----*/
     void deleteDepartment(Department department);
     /*-----OTHER-----*/
