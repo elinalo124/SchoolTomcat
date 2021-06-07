@@ -64,8 +64,12 @@ public class DepartmentDAOImpl implements DepartmentDAO {
     {
         begin();
         Department departmentToUpdate = entityManager.find(Department.class, department.getId());
+        departmentToUpdate.setName(department.getName());
+        departmentToUpdate.setCourses(department.getCourses());
+        System.out.println("Deparmetn to udate:" + departmentToUpdate);
         entityManager.merge(departmentToUpdate);
         entityManager.getTransaction().commit();
+        System.out.println("Department updated");
     }
     public void updateElementByID(int id, String name) {
         begin();
@@ -79,7 +83,10 @@ public class DepartmentDAOImpl implements DepartmentDAO {
         begin();
         Department departmentToUpdate = entityManager.find(Department.class, id);
         departmentToUpdate.getCourses().add(course);
+        System.out.println("Deparmetn to udate:" + departmentToUpdate);
+        entityManager.merge(departmentToUpdate);
         entityManager.getTransaction().commit();
+        System.out.println("Department updated");
     }
 
     /*============DELETE============*/

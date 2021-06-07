@@ -52,6 +52,6 @@ public class Course {
     @Override
     public String toString() {
 
-        return id +name + description+ department.getName()+"\n";
+        return id +name + description+"\n";
     }
 }

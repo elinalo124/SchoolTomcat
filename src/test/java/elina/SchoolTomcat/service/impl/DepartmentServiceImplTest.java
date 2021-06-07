@@ -48,8 +48,8 @@ class DepartmentServiceImplTest {
     public void createDepartmentTest()
     {
         assertEquals(department1.getName(), retrievedDepartments.get(0).getName());
-        System.out.print("Retrieved\n"+retrievedDepartments);
-        System.out.print("Saved\n"+savedDepartments);
+        //System.out.print("Retrieved\n"+retrievedDepartments);
+        //System.out.print("Saved\n"+savedDepartments);
     }
 
     @Test
