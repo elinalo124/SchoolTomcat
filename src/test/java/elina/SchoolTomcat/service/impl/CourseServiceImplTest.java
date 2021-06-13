@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CourseServiceImplTest {
 
+    /*
     private Course course1;
     private Course course2;
     private List<Course> savedCourses = new LinkedList<>();
@@ -91,5 +92,7 @@ class CourseServiceImplTest {
         savedCourses.add(course1);
         savedCourses.add(course2);
     }
+
+     */
 
 }

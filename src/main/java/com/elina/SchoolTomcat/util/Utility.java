@@ -10,7 +10,7 @@ import java.util.List;
 
 public class Utility {
 
-
+    /*
      static private final String[][] COURSE_DATA = {
             {"Course 1", "Maths"},
             {"Course 2", "Physics"},
@@ -47,5 +47,7 @@ public class Utility {
         teacher.setLastName(TEACHER_DATA[i-1][2]);
         return teacher;
     }
+
+     */
 
 }

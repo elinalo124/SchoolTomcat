@@ -1,13 +1,13 @@
 package com.elina.SchoolTomcat.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Access(AccessType.FIELD) //persistance at the level of the fields
@@ -21,29 +21,35 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Student extends User{
     @Id
+    @EqualsAndHashCode.Include
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     private int id;
     private String major;
     @ManyToMany
     @JoinTable(
             name = "STUDENT_COURSES",
-            joinColumns = @JoinColumn(name = "STUDENT_ID"),
-            inverseJoinColumns = @JoinColumn(name = "COURSE_ID"))
-    private List<Course> courses;
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id"))
+    @JsonIgnore
+    private Set<Course> courses;
+    private boolean deletedFlag;
 
 
-    public Student(int id, String firstName, String lastName, int id1, String major) {
-        super(id, firstName, lastName);
-        this.id = id1;
+    public Student(String firstName, String lastName, String major) {
+        super(firstName, lastName);
         this.major = major;
-        this.courses = new ArrayList<>();
+        this.courses = new HashSet<>();
+        this.deletedFlag = false;
     }
 
     @Override
     public String toString() {
-        return "Student(id=" + id +
-                ", major=" + major +
-                ", courses=" + courses.toString() + ")";
+        String title = "********TABLE Studen********";
+        String columns = "id        firstName      lastName     major   |";
+        String values = id +"        "+ getFirstName() +"    "+ getLastName()+"    "+major;
+        return "\n"+title + "\n" + columns + "\n" + values+"\n\n";
     }
 }

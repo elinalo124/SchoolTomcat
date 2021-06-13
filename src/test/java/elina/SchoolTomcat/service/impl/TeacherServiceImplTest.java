@@ -18,6 +18,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TeacherServiceImplTest {
+    /*
     private Teacher teacher1;
     private Teacher teacher2;
     private List<Teacher> savedTeachers = new LinkedList<>();

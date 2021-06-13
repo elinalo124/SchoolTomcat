@@ -13,9 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import javax.persistence.EntityManager;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
-import java.util.Scanner;
 import java.util.stream.Collectors;
 
 
@@ -104,7 +102,7 @@ public class DepartmentServlet extends HttpServlet {
                 String id = request.getParameter("id");
                 String name = request.getParameter("name");
 
-                int status2 = departmentService.updateDepartmentByID(Integer.parseInt(id),name);
+                int status2 = departmentService.updateDepartmentNameByID(Integer.parseInt(id),name);
 
                 response.getWriter().println(objectMapper.writeValueAsString(departmentService.retrieveAllDepartments()));
                 break;

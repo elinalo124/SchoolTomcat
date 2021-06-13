@@ -2,6 +2,7 @@ package com.elina.SchoolTomcat.dao.impl;
 
 import com.elina.SchoolTomcat.dao.CourseDAO;
 import com.elina.SchoolTomcat.model.Course;
+import com.elina.SchoolTomcat.model.Department;
 import com.elina.SchoolTomcat.model.Student;
 
 import javax.persistence.EntityManager;
@@ -77,5 +78,14 @@ public class CourseDAOImpl implements CourseDAO{
         entityManager.remove(courseToDelete);
         entityManager.getTransaction().commit();
     }
+
+    /*============OTHER============*/
+    public void setDepartment(int department_id, Course course){
+        Course courseToUpdate = entityManager.find(Course.class, course.getId());
+        Department providedDepartment = entityManager.find(Department.class, department_id);
+        courseToUpdate.setDepartment(providedDepartment);
+        entityManager.merge(courseToUpdate);
+    }
+
 
 }

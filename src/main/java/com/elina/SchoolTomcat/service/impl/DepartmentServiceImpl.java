@@ -7,6 +7,7 @@ import com.elina.SchoolTomcat.model.Department;
 import com.elina.SchoolTomcat.service.DepartmentService;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,54 +26,118 @@ public class DepartmentServiceImpl implements DepartmentService {
     /*-----CREATE-----*/
     public int saveDepartment(Department department)
     {
-        departmentDAOImpl.saveElement(department);
-        for(Course course:department.getCourses())
-        {
-            course.setDepartment(department);
-            courseDAOImpl.updateElement(course);
+        begin();
+        try{
+            departmentDAOImpl.saveElement(department);
+
+            int department_id = departmentDAOImpl.retrieveDepartmentByName(department.getName()).get().getId();
+            for(Course course:department.getCourses())
+            {
+                courseDAOImpl.setDepartment(department_id, course);
+            }
+            end();
+            return 1;
+        }catch(PersistenceException exc){
+            em.getTransaction().rollback();
+            throw exc;
         }
-        return 1;
+
     }
 
     /*-----RETRIEVE-----*/
     public List<Department> retrieveAllDepartments()
     {
+        begin();
         return departmentDAOImpl.retrieveAllElements();
     }
 
-    public Optional<Department> retrieveDepartmentByID (int id)
+    public Optional<Department> retrieveDepartmentByID (int department_id)
     {
-        return departmentDAOImpl.retrieveElementByID(id);
+        begin();
+        return departmentDAOImpl.retrieveElementByID(department_id);
     }
     public Optional<Department> retrieveDepartmentByName (String name)
     {
+        begin();
         return departmentDAOImpl.retrieveDepartmentByName(name);
     }
     /*-----UPDATE-----*/
     public int updateDepartment(Department department)
     {
-        departmentDAOImpl.updateElement(department);
-        return 1;
+        begin();
+        try{
+            departmentDAOImpl.updateElement(department);
+            int department_id = departmentDAOImpl.retrieveDepartmentByName(department.getName()).get().getId();
+            for(Course course:department.getCourses())
+            {
+                courseDAOImpl.setDepartment(department_id, course);
+            }
+            end();
+            return 1;
+        }catch(PersistenceException exc){
+            em.getTransaction().rollback();
+            throw exc;
+        }
+
     }
     public int updateDepartmentByID(int id, String name) {
-        departmentDAOImpl.updateElementByID(id,name);
-        return 1;
+        begin();
+        try{
+            departmentDAOImpl.updateElementByID(id,name);
+            end();
+            return 1;
+        }catch(PersistenceException exc){
+            em.getTransaction().rollback();
+            throw exc;
+        }
     }
     /*-----DELETE-----*/
     public void deleteDepartment(Department department)
     {
-        departmentDAOImpl.deleteElement(department);
+        begin();
+        try{
+            departmentDAOImpl.deleteElement(department);
+            end();
+        }catch(PersistenceException exc){
+            em.getTransaction().rollback();
+            throw exc;
+        }
     }
     public void deleteDepartmentByID(int id)
     {
-        Department department = departmentDAOImpl.retrieveElementByID(id).get();
-        departmentDAOImpl.deleteElement(department);
+        begin();
+        try{
+            Department department = departmentDAOImpl.retrieveElementByID(id).get();
+            departmentDAOImpl.deleteElement(department);
+            end();
+        }catch(PersistenceException exc){
+            em.getTransaction().rollback();
+            throw exc;
+        }
     }
     /*-----OTHER-----*/
-    public void addCourse(Integer id, Course course)
+    public void addCourse(Integer department_id, Course course)
     {
-        departmentDAOImpl.addCourse(id,course);
+        begin();
+        try{
+            departmentDAOImpl.addCourse(department_id,course);
+            courseDAOImpl.setDepartment(department_id,course);
+            end();
+        }catch(PersistenceException exc){
+            em.getTransaction().rollback();
+            throw exc;
+        }
     }
 
+    /*-----HELPER METHODS-----*/
+    private void begin()
+    {
+        if(!em.getTransaction().isActive())
+            em.getTransaction().begin();
+    }
+
+    private void end(){
+        em.getTransaction().commit();
+    }
 
 }

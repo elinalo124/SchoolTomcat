@@ -1,10 +1,7 @@
 package com.elina.SchoolTomcat.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
@@ -12,7 +9,9 @@ import javax.persistence.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @NamedQueries({
@@ -25,35 +24,37 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Course {
     @Id
+    @EqualsAndHashCode.Include
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(length = 64, nullable = false)
     private String name;
     private String description;
     @ManyToOne
-    @JoinColumn(name = "department")
+    @JoinColumn(name = "department_id")
     @JsonIgnore
     private Department department;
-    @OneToOne(mappedBy = "course",cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "course")
     private Teacher teacher;
-    @ManyToMany(mappedBy = "courses",cascade = CascadeType.ALL)
-    private List<Student> students;
+    @ManyToMany(mappedBy = "courses")
+    private Set<Student> students;
+    private boolean deletedFlag;
 
     public Course(String name, String description) {
         this.name = name;
         this.description = description;
-    }
-
-    public Course(int id, String name, String description) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.students = new ArrayList<>();
+        this.students = new HashSet<>();
+        this.deletedFlag = false;
     }
 
     @Override
     public String toString() {
-
-        return id +name + description+"\n";
+        String title = "********TABLE Course********";
+        String columns = "id        name      description     |";
+        String values = id +"        "+ name +"    "+ description;
+        return "\n"+title + "\n" + columns + "\n" + values+"\n\n";
     }
 }

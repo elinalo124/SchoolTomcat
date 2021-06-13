@@ -14,6 +14,7 @@ import java.util.LinkedList;
 public class CreateDB {
 
     public static void main(String[] args){
+        /*
 
         Department department1 = Utility.createDepartment(1,new LinkedList<>(Arrays.asList(1,2)));
         Department department2 = Utility.createDepartment(2,new LinkedList<>(Arrays.asList(3)));
@@ -28,5 +29,7 @@ public class CreateDB {
         departmentService.saveDepartment(department2);
 
         em.getTransaction().commit();
+
+         */
     }
 }

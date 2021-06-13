@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DepartmentServiceImplTest {
 
+    /*
     private Department department1;
     private Department department2;
     private List<Department> savedDepartments = new LinkedList<>();
@@ -91,5 +92,7 @@ class DepartmentServiceImplTest {
         savedDepartments.add(department1);
         savedDepartments.add(department2);
     }
+
+     */
 
 }
