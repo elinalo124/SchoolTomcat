@@ -6,13 +6,27 @@
             </Pattern>
         </encoder>
     </appender>
-    <logger name="org.hibernate.SQL" level="debug" additivity="false">
+    <appender name="FILE-MODULE" class="ch.qos.logback.core.FileAppender">
+        <file>/Users/elinalo/IdeaProjects/module.log</file>
+        <encoder>
+            <pattern>
+                %date %level [%thread] %logger{10} [%file:%line] %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+    <logger name="org.hibernate.SQL" level="trace" additivity="false">
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE-MODULE"/>
     </logger>
-    <logger name="org.hibernate.type.descriptor.sql" level="trace" additivity="false">
+    <logger name="org.hibernate.type.descriptor.sql" level="debug" additivity="false">
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE-MODULE"/>
     </logger>
+    <logger name="org.hibernate.type" level="ALL" />
+    <logger name="org.hibernate" level="DEBUG" />
     <root level="info">
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE-MODULE"/>
     </root>
+
 </configuration>

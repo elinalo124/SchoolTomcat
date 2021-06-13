@@ -42,21 +42,21 @@ public class CourseServiceImpl implements CourseService {
     {
         return courseDAOImpl.retrieveElementByID(id);
     }
+    public Optional<Course> retrieveCourseByName(String name)
+    {
+        return courseDAOImpl.retrieveCourseByName(name);
+    }
     /*-----UPDATE-----*/
     public void updateCourse(Course course)
     {
         courseDAOImpl.updateElement(course);
     }
     /*-----DELETE-----*/
-    public void deleteCourse(Course department)
+    public void deleteCourse(Course course)
     {
-        courseDAOImpl.deleteElement(department);
+        courseDAOImpl.deleteElement(course);
     }
     /*-----OTHER-----*/
-    public Optional<Course> retrieveCourseByName(String name)
-    {
-        return courseDAOImpl.retrieveCourseByName(name);
-    }
     public void addStudent(int id, Student student)
     {
         courseDAOImpl.addStudent(id,student);

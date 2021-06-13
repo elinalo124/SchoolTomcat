@@ -1,5 +1,6 @@
 package com.elina.SchoolTomcat.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,6 +32,7 @@ public class Course {
     private String description;
     @ManyToOne
     @JoinColumn(name = "department")
+    @JsonIgnore
     private Department department;
     @OneToOne(mappedBy = "course",cascade = CascadeType.ALL, orphanRemoval = true)
     private Teacher teacher;
