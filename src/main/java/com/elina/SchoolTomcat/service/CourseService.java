@@ -13,12 +13,11 @@ public interface CourseService {
     void saveCourse(Course course);
     /*-----RETRIEVE-----*/
     List<Course> retrieveAllCourses();
-    Optional<Course> retrieveCourseByID (int id);
     Optional<Course> retrieveCourseByName(String name);
     /*-----UPDATE-----*/
     void updateCourse(Course course);
     /*-----DELETE-----*/
     void deleteCourse(Course course);
     /*-----OTHER-----*/
-    void addStudent(int id, Student student);
+    //void addStudent(int id, Student student);
 }

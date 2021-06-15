@@ -1,10 +1,13 @@
 package com.elina.SchoolTomcat.dao.impl;
 
 import com.elina.SchoolTomcat.dao.TeacherDAO;
+import com.elina.SchoolTomcat.model.Course;
+import com.elina.SchoolTomcat.model.Student;
 import com.elina.SchoolTomcat.model.Teacher;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class TeacherDAOImpl implements TeacherDAO {
@@ -14,56 +17,55 @@ public class TeacherDAOImpl implements TeacherDAO {
         this.entityManager = entityManager;
     }
 
-    private void begin()
-    {
-        if(!entityManager.getTransaction().isActive())
-            entityManager.getTransaction().begin();
-    }
     /*-----------------------------CRUD---------------------------------------*/
     /*============CREATE============*/
     public void saveElement(Teacher teacher)
     {
-        begin();
         if (entityManager.contains(teacher)) {
             entityManager.merge(teacher);
         } else {
             entityManager.persist(teacher);
         }
-        entityManager.getTransaction().commit();
 
     }
     /*============RETRIEVE============*/
     public List<Teacher> retrieveAllElements()
     {
-        begin();
         return entityManager.createQuery("from Teacher").getResultList();
     }
 
-    public Optional<Teacher> retrieveElementByID(int id)
+    public Optional<Teacher> retrieveElementByID(int teacher_id)
     {
-        begin();
-        Teacher teacher = entityManager.find(Teacher.class, id);
+        Teacher teacher = entityManager.find(Teacher.class, teacher_id);
         return teacher != null ? Optional.of(teacher) : Optional.empty();
     }
 
+    public Optional<Teacher> retrieveElementByName(String firstName, String lastName)
+    {
+        Teacher teacher = entityManager.createNamedQuery("Teacher.findByName", Teacher.class)
+                .setParameter("firstName", firstName)
+                .setParameter("lastName",lastName)
+                .getSingleResult();
+        return teacher != null ? Optional.of(teacher) : Optional.empty();
+    }
     /*============UPDATE============*/
 
     public void updateElement(Teacher teacher)
     {
-        begin();
         Teacher teacherToUpdate = entityManager.find(Teacher.class, teacher.getId());
+        teacherToUpdate.setFirstName(teacher.getFirstName());
+        teacherToUpdate.setLastName(teacher.getLastName());
+        teacherToUpdate.setEducation(teacher.getEducation());
         entityManager.merge(teacherToUpdate);
-        entityManager.getTransaction().commit();
     }
 
 
     /*============DELETE============*/
     public void deleteElement(Teacher teacher)
     {
-        begin();
         Teacher teacherToDelete = entityManager.find(Teacher.class, teacher.getId());
-        entityManager.remove(teacherToDelete);
-        entityManager.getTransaction().commit();
+        //entityManager.remove(teacherToDelete);
+        teacherToDelete.setDeletedFlag(true);
+        entityManager.merge(teacherToDelete);
     }
-
 }

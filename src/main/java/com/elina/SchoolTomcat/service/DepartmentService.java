@@ -13,14 +13,13 @@ public interface DepartmentService {
     /*-----RETRIEVE-----*/
     List<Department> retrieveAllDepartments();
     Optional<Department> retrieveDepartmentByID (int id);
-    Optional<Department> retrieveDepartmentByName(String name);
     /*-----UPDATE-----*/
     int updateDepartment(Department department);
-    int updateDepartmentNameByID(int id, String name);
+    //int updateDepartmentNameByID(int id, String name);
     /*-----DELETE-----*/
     void deleteDepartment(Department department);
-    void deleteDepartmentByID(int id);
+    //void deleteDepartmentByID(int id);
     /*-----OTHER-----*/
-    void addCourse(Integer id, Course course);
+    //void addCourse(Integer id, Course course);
 
 }

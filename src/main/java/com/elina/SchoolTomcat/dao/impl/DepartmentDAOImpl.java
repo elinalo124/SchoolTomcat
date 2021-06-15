@@ -36,17 +36,16 @@ public class DepartmentDAOImpl implements DepartmentDAO {
         return entityManager.createQuery("from Department").getResultList();
     }
 
-    public Optional<Department> retrieveElementByID(int id)
+    public Optional<Department> retrieveElementByID(int department_id)
     {
-        Department department = entityManager.find(Department.class, id);
+        Department department = entityManager.find(Department.class, department_id);
         return department != null? Optional.of(department): Optional.empty();
     }
 
-
-    public Optional<Department> retrieveDepartmentByName(String name)
+    public Optional<Department> retrieveElementByName(String department_name)
     {
         Department department = entityManager.createNamedQuery("Department.findByName", Department.class)
-                .setParameter("name", name)
+                .setParameter("name", department_name)
                 .getSingleResult();
         return department != null ? Optional.of(department) : Optional.empty();
     }
@@ -55,7 +54,6 @@ public class DepartmentDAOImpl implements DepartmentDAO {
     {
         Department departmentToUpdate = entityManager.find(Department.class, department.getId());
         departmentToUpdate.setName(department.getName());
-        departmentToUpdate.setCourses(department.getCourses());
         entityManager.merge(departmentToUpdate);
     }
     public void updateElementByID(int id, String name) {
@@ -63,20 +61,33 @@ public class DepartmentDAOImpl implements DepartmentDAO {
         departmentToUpdate.setName(name);
         entityManager.merge(departmentToUpdate);
     }
-    public void addCourse(Integer id, Course course)
-    {
-        Department departmentToUpdate = entityManager.find(Department.class, id);
-        departmentToUpdate.getCourses().add(course);
-        entityManager.merge(departmentToUpdate);
-    }
+
 
     /*============DELETE============*/
     public void deleteElement(Department department)
     {
         Department departmentToDelete = entityManager.find(Department.class, department.getId());
-        entityManager.remove(departmentToDelete);
+        //entityManager.remove(departmentToDelete);
+        departmentToDelete.setDeletedFlag(true);
+        departmentToDelete.setCourses(null); //Child
+        entityManager.merge(departmentToDelete);
     }
 
+    /*============OTHER============*/
+    /*public void addCourse(Integer department_id, Course course)
+    {
+        Department departmentToUpdate = entityManager.find(Department.class, department_id);
+        departmentToUpdate.getCourses().add(course);
+        entityManager.merge(departmentToUpdate);
+    }
+    public void removeCourse(Integer department_id, Course course)
+    {
+        Department departmentToUpdate = entityManager.find(Department.class, department_id);
+        departmentToUpdate.getCourses().remove(course);
+        entityManager.merge(departmentToUpdate);
+    }
+
+     */
 
 }
 

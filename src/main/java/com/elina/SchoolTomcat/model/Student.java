@@ -12,6 +12,8 @@ import java.util.Set;
 @Entity
 @Access(AccessType.FIELD) //persistance at the level of the fields
 @NamedQueries({
+        @NamedQuery(name = "Student.findByName",
+                query = "SELECT s FROM Student s WHERE (s.firstName = :firstName AND s.lastName = :lastName)"),
         @NamedQuery(name = "Student.findByID",
                 query = "SELECT s FROM Student s WHERE s.id = :id"),
         @NamedQuery(name = "Student.findAll",

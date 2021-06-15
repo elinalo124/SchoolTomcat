@@ -7,8 +7,8 @@ import java.util.Optional;
 
 public interface CourseDAO extends CRUD<Course>{
 
-    Optional<Course> retrieveCourseByName(String name);
-    void addStudent(int id, Student student);
+    //Optional<Course> retrieveCourseByName(String name);
+    //void addStudent(int id, Student student);
 
 
 }

@@ -18,5 +18,5 @@ public interface StudentService {
     /*-----DELETE-----*/
     void deleteStudent(Student student);
     /*-----OTHER-----*/
-    void changeMajor(Integer id, String major);
+    //void changeMajor(Integer id, String major);
 }

@@ -11,6 +11,8 @@ import java.util.HashSet;
 
 @Entity
 @NamedQueries({
+        @NamedQuery(name = "Teacher.findByName",
+                query = "SELECT t FROM Teacher t WHERE (t.firstName = :firstName AND t.lastName = :lastName)"),
         @NamedQuery(name = "Teacher.findByID",
                 query = "SELECT t FROM Teacher t WHERE t.id = :id"),
         @NamedQuery(name = "Teacher.findAll",

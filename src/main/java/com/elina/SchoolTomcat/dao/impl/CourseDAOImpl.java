@@ -4,6 +4,7 @@ import com.elina.SchoolTomcat.dao.CourseDAO;
 import com.elina.SchoolTomcat.model.Course;
 import com.elina.SchoolTomcat.model.Department;
 import com.elina.SchoolTomcat.model.Student;
+import com.elina.SchoolTomcat.model.Teacher;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -17,75 +18,70 @@ public class CourseDAOImpl implements CourseDAO{
         this.entityManager = entityManager;
     }
 
-    private void begin()
-    {
-        if(!entityManager.getTransaction().isActive())
-            entityManager.getTransaction().begin();
-    }
+
 
     /*-----------------------------CRUD---------------------------------------*/
     /*============CREATE============*/
     public void saveElement(Course course)
     {
-        begin();
         if (entityManager.contains(course)) {
             entityManager.merge(course);
         } else {
             entityManager.persist(course);
         }
-        entityManager.getTransaction().commit();
     }
     /*============RETRIEVE============*/
     public List<Course> retrieveAllElements()
     {
-        begin();
         return entityManager.createQuery("from Course").getResultList();
     }
-    public Optional<Course> retrieveElementByID(int id)
+    public Optional<Course> retrieveElementByID(int course_id)
     {
-        begin();
-        Course course = entityManager.find(Course.class, id);
+        Course course = entityManager.find(Course.class, course_id);
         return course != null? Optional.of(course): Optional.empty();
     }
-    public Optional<Course> retrieveCourseByName(String name)
+
+    public Optional<Course> retrieveElementByName(String course_name)
     {
-        begin();
         Course course = entityManager.createNamedQuery("Course.findByName", Course.class)
-                .setParameter("name", name)
+                .setParameter("name", course_name)
                 .getSingleResult();
         return course != null ? Optional.of(course) : Optional.empty();
     }
     /*============UPDATE============*/
     public void updateElement(Course course)
     {
-        begin();
         Course courseToUpdate = entityManager.find(Course.class, course.getId());
+        courseToUpdate.setName(course.getName());
+        courseToUpdate.setDescription(course.getDescription());
         entityManager.merge(courseToUpdate);
-        entityManager.getTransaction().commit();
-    }
-    public void addStudent(int id, Student student)
-    {
-        begin();
-        Course courseToUpdate = entityManager.find(Course.class, id);
-        courseToUpdate.getStudents().add(student);
-        entityManager.getTransaction().commit();
     }
     /*============DELETE============*/
     public void deleteElement(Course course)
     {
-        begin();
         Course courseToDelete = entityManager.find(Course.class, course.getId());
-        entityManager.remove(courseToDelete);
-        entityManager.getTransaction().commit();
+        //entityManager.remove(courseToDelete);
+        courseToDelete.setDeletedFlag(true);
+        courseToDelete.setTeacher(null); //Child
+        courseToDelete.setStudents(null); //Child
+        entityManager.merge(courseToDelete);
     }
 
     /*============OTHER============*/
-    public void setDepartment(int department_id, Course course){
+    /*public void setDepartment(Department department, Course course){
         Course courseToUpdate = entityManager.find(Course.class, course.getId());
-        Department providedDepartment = entityManager.find(Department.class, department_id);
-        courseToUpdate.setDepartment(providedDepartment);
+        courseToUpdate.setDepartment(department);
         entityManager.merge(courseToUpdate);
     }
 
+    public void setTeacher(Teacher teacher, Course course) {
+    }
 
+    public void addStudent(Student student, Course course)
+    {
+        Course courseToUpdate = entityManager.find(Course.class, id);
+        courseToUpdate.getStudents().add(student);
+    }
+
+     */
 }

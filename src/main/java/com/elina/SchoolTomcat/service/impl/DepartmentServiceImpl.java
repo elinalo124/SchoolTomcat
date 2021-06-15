@@ -2,6 +2,8 @@ package com.elina.SchoolTomcat.service.impl;
 
 import com.elina.SchoolTomcat.dao.impl.CourseDAOImpl;
 import com.elina.SchoolTomcat.dao.impl.DepartmentDAOImpl;
+import com.elina.SchoolTomcat.dao.impl.StudentDAOImpl;
+import com.elina.SchoolTomcat.dao.impl.TeacherDAOImpl;
 import com.elina.SchoolTomcat.model.Course;
 import com.elina.SchoolTomcat.model.Department;
 import com.elina.SchoolTomcat.service.DepartmentService;
@@ -14,13 +16,17 @@ import java.util.Optional;
 public class DepartmentServiceImpl implements DepartmentService {
 
     private EntityManager em;
-    private DepartmentDAOImpl departmentDAOImpl;
     private CourseDAOImpl courseDAOImpl;
+    private DepartmentDAOImpl departmentDAOImpl;
+    private StudentDAOImpl studentDAOImpl;
+    private TeacherDAOImpl teacherDAOImpl;
 
     public DepartmentServiceImpl(EntityManager em) {
         this.em=em;
-        departmentDAOImpl = new DepartmentDAOImpl(em);
         courseDAOImpl = new CourseDAOImpl(em);
+        departmentDAOImpl = new DepartmentDAOImpl(em);
+        studentDAOImpl = new StudentDAOImpl(em);
+        teacherDAOImpl = new TeacherDAOImpl(em);
     }
 
     /*-----CREATE-----*/
@@ -30,10 +36,14 @@ public class DepartmentServiceImpl implements DepartmentService {
         try{
             departmentDAOImpl.saveElement(department);
 
-            int department_id = departmentDAOImpl.retrieveDepartmentByName(department.getName()).get().getId();
+            Department savedDepartment = departmentDAOImpl.retrieveElementByName(department.getName()).get();
+
+            //Update courses with department
             for(Course course:department.getCourses())
             {
-                courseDAOImpl.setDepartment(department_id, course);
+                Course retrievedCourse = courseDAOImpl.retrieveElementByName(course.getName()).get();
+                retrievedCourse.setDepartment(savedDepartment);
+                courseDAOImpl.updateElement(retrievedCourse);
             }
             end();
             return 1;
@@ -43,6 +53,8 @@ public class DepartmentServiceImpl implements DepartmentService {
         }
 
     }
+
+
 
     /*-----RETRIEVE-----*/
     public List<Department> retrieveAllDepartments()
@@ -56,22 +68,20 @@ public class DepartmentServiceImpl implements DepartmentService {
         begin();
         return departmentDAOImpl.retrieveElementByID(department_id);
     }
-    public Optional<Department> retrieveDepartmentByName (String name)
+    public Optional<Department> retrieveDepartmentByName (String department_name)
     {
         begin();
-        return departmentDAOImpl.retrieveDepartmentByName(name);
+        return departmentDAOImpl.retrieveElementByName(department_name);
     }
+
+
+
     /*-----UPDATE-----*/
-    public int updateDepartment(Department department)
+    public int updateDepartment(Department department) //knows db's id, updates name
     {
         begin();
         try{
             departmentDAOImpl.updateElement(department);
-            int department_id = departmentDAOImpl.retrieveDepartmentByName(department.getName()).get().getId();
-            for(Course course:department.getCourses())
-            {
-                courseDAOImpl.setDepartment(department_id, course);
-            }
             end();
             return 1;
         }catch(PersistenceException exc){
@@ -80,22 +90,19 @@ public class DepartmentServiceImpl implements DepartmentService {
         }
 
     }
-    public int updateDepartmentByID(int id, String name) {
-        begin();
-        try{
-            departmentDAOImpl.updateElementByID(id,name);
-            end();
-            return 1;
-        }catch(PersistenceException exc){
-            em.getTransaction().rollback();
-            throw exc;
-        }
-    }
+
     /*-----DELETE-----*/
     public void deleteDepartment(Department department)
     {
         begin();
         try{
+            //Children deletion
+            Department retrievedDepartment = departmentDAOImpl.retrieveElementByName(department.getName()).get();
+            for(Course course:retrievedDepartment.getCourses())
+            {
+                courseDAOImpl.deleteElement(course);
+            }
+            //Department deletion
             departmentDAOImpl.deleteElement(department);
             end();
         }catch(PersistenceException exc){
@@ -103,12 +110,18 @@ public class DepartmentServiceImpl implements DepartmentService {
             throw exc;
         }
     }
+
+    /*
     public void deleteDepartmentByID(int id)
     {
         begin();
         try{
-            Department department = departmentDAOImpl.retrieveElementByID(id).get();
-            departmentDAOImpl.deleteElement(department);
+            Department retrievedDepartment = departmentDAOImpl.retrieveElementByID(id).get();
+            for(Course course:retrievedDepartment.getCourses())
+            {
+                courseDAOImpl.deleteElement(course);
+            }
+            departmentDAOImpl.deleteElement(retrievedDepartment);
             end();
         }catch(PersistenceException exc){
             em.getTransaction().rollback();
@@ -116,6 +129,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         }
     }
     /*-----OTHER-----*/
+    /*
     public void addCourse(Integer department_id, Course course)
     {
         begin();
