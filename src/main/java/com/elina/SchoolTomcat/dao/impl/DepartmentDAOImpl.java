@@ -52,9 +52,10 @@ public class DepartmentDAOImpl implements DepartmentDAO {
     /*============UPDATE============*/
     public void updateElement(Department department)
     {
-        Department departmentToUpdate = entityManager.find(Department.class, department.getId());
-        departmentToUpdate.setName(department.getName());
-        entityManager.merge(departmentToUpdate);
+        //Department departmentToUpdate = entityManager.find(Department.class, department.getId());
+        //departmentToUpdate.setName(department.getName());
+        //entityManager.merge(departmentToUpdate);
+        entityManager.merge(department);
     }
     public void updateElementByID(int id, String name) {
         Department departmentToUpdate = entityManager.find(Department.class, id);

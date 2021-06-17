@@ -108,7 +108,7 @@ public class StudentServiceImpl implements StudentService{
 
     }
     /*-----OTHER-----*/
-    public void changeMajor(Integer id, String major)
+    /*public void changeMajor(Integer id, String major)
     {
         begin();
         try{

@@ -39,11 +39,13 @@ public class DepartmentServiceImpl implements DepartmentService {
             Department savedDepartment = departmentDAOImpl.retrieveElementByName(department.getName()).get();
 
             //Update courses with department
-            for(Course course:department.getCourses())
-            {
-                Course retrievedCourse = courseDAOImpl.retrieveElementByName(course.getName()).get();
-                retrievedCourse.setDepartment(savedDepartment);
-                courseDAOImpl.updateElement(retrievedCourse);
+            if(department.getCourses()!=null){
+                for(Course course:department.getCourses())
+                {
+                    Course retrievedCourse = courseDAOImpl.retrieveElementByName(course.getName()).get();
+                    retrievedCourse.setDepartment(savedDepartment);
+                    courseDAOImpl.updateElement(retrievedCourse);
+                }
             }
             end();
             return 1;
@@ -103,7 +105,7 @@ public class DepartmentServiceImpl implements DepartmentService {
                 courseDAOImpl.deleteElement(course);
             }
             //Department deletion
-            departmentDAOImpl.deleteElement(department);
+            departmentDAOImpl.deleteElement(retrievedDepartment);
             end();
         }catch(PersistenceException exc){
             em.getTransaction().rollback();

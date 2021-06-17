@@ -39,28 +39,33 @@ public class CourseServiceImpl implements CourseService {
             //Save course
             courseDAOImpl.saveElement(course);
 
+
             Course savedCourse = courseDAOImpl.retrieveElementByName(course.getName()).get();
 
+
             //Update department with new course
-            if(savedCourse.getDepartment()!=null){
-                Department retrievedDepartment = departmentDAOImpl.retrieveElementByName(savedCourse.getDepartment().getName()).get();
+            if(course.getDepartment()!=null){
+                Department retrievedDepartment = departmentDAOImpl.retrieveElementByName(course.getDepartment().getName()).get();
                 retrievedDepartment.getCourses().add(savedCourse);
                 departmentDAOImpl.updateElement(retrievedDepartment);
             }
 
             //Update teacher with new course
-            if(savedCourse.getTeacher()!=null){
-                Teacher retrievedTeacher = teacherDAOImpl.retrieveElementByName(savedCourse.getTeacher().getFirstName(), savedCourse.getTeacher().getLastName()).get();
+            if(course.getTeacher()!=null){
+                Teacher retrievedTeacher = teacherDAOImpl.retrieveElementByName(course.getTeacher().getFirstName(), course.getTeacher().getLastName()).get();
                 retrievedTeacher.setCourse(savedCourse);
                 teacherDAOImpl.updateElement(retrievedTeacher);
             }
 
+
             //Update student with new course
-            for(Student student:savedCourse.getStudents())
-            {
-                Student retrievedStudent = studentDAOImpl.retrieveElementByName(student.getFirstName(),student.getLastName()).get();
-                retrievedStudent.getCourses().add(savedCourse);
-                studentDAOImpl.updateElement(retrievedStudent);
+            if(course.getTeacher()!=null){
+                for(Student student:course.getStudents())
+                {
+                    Student retrievedStudent = studentDAOImpl.retrieveElementByName(student.getFirstName(),student.getLastName()).get();
+                    retrievedStudent.getCourses().add(savedCourse);
+                    studentDAOImpl.updateElement(retrievedStudent);
+                }
             }
 
             end();
@@ -116,12 +121,15 @@ public class CourseServiceImpl implements CourseService {
         try{
             //Children deletion
             Course retrievedCourse = courseDAOImpl.retrieveElementByName(course.getName()).get();
-            for(Student student:retrievedCourse.getStudents())
-            {
-                studentDAOImpl.deleteElement(student);
+            if(retrievedCourse.getStudents()!=null){
+                for(Student student:retrievedCourse.getStudents())
+                {
+                    studentDAOImpl.deleteElement(student);
+                }
             }
-            teacherDAOImpl.deleteElement(retrievedCourse.getTeacher());
-
+            if(retrievedCourse.getTeacher()!=null){
+                teacherDAOImpl.deleteElement(retrievedCourse.getTeacher());
+            }
             //Course deletion
             courseDAOImpl.deleteElement(course);
             end();
@@ -130,6 +138,7 @@ public class CourseServiceImpl implements CourseService {
             throw exc;
         }
     }
+
     /*-----OTHER-----*/
     /*
     public void addStudent(int id, Student student)

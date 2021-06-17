@@ -29,6 +29,14 @@ public class DepartmentServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
+    /*
+    private static Object getObject(HttpServletRequest request, ObjectMapper objectMapper) throws IOException {
+        String json = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+        return objectMapper.readValue(json, Object.class);
+    }
+
+     */
+
     @Override //CREATE
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -40,6 +48,7 @@ public class DepartmentServlet extends HttpServlet {
         String json = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         Department department = objectMapper.readValue(json, Department.class);
 
+        //Department department = (Department) getObject(request,objectMapper);
         //Store object
         int status=departmentService.saveDepartment(department);
         em.close();
@@ -84,43 +93,11 @@ public class DepartmentServlet extends HttpServlet {
         DepartmentServiceImpl departmentService = new DepartmentServiceImpl(em);
         ObjectMapper objectMapper = new ObjectMapper();
 
-        //Determine method, retrieve and respond
-        switch(request.getParameter("method")) {
-            case "department":
-                //String json = inputStreamToString(request.getInputStream());
-                String json = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-                System.out.println("EL TEXTO LEIDO ES: "+json);
-                Department department = objectMapper.readValue(json, Department.class);
-                System.out.println("EL DEPTO LEIDO ES: "+department);
-                int status1 = departmentService.updateDepartment(department);
-                System.out.println("EL DEPTO STAUTS ES: "+status1);
-                List<Department> retrievedDepartments = departmentService.retrieveAllDepartments();
-                System.out.println("ALL DEPARTMENTS:"+retrievedDepartments);
-                response.getWriter().println(objectMapper.writeValueAsString(retrievedDepartments));
-                break;
-            case "id":
-                String id = request.getParameter("id");
-                String name = request.getParameter("name");
-
-                int status2 = departmentService.updateDepartmentNameByID(Integer.parseInt(id),name);
-
-                response.getWriter().println(objectMapper.writeValueAsString(departmentService.retrieveAllDepartments()));
-                break;
-            case "addCourse":
-                String id2 = request.getParameter("id");
-                String json2 = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-                System.out.println("EL TEXTO LEIDO ES: "+json2);
-                Course course = objectMapper.readValue(json2, Course.class);
-                System.out.println("EL COURSE LEIDO ES: "+course);
-                departmentService.addCourse(Integer.parseInt(id2),course);
-                List<Department> retrievedDepartments2 = departmentService.retrieveAllDepartments();
-                System.out.println("ALL DEPARTMENTS:"+retrievedDepartments2);
-                response.getWriter().println(objectMapper.writeValueAsString(retrievedDepartments2));
-                break;
-            default:
-                System.out.println("Non existent method");
-                break;
-        }
+        String json = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+        Department department = objectMapper.readValue(json, Department.class);
+        int status1 = departmentService.updateDepartment(department);
+        List<Department> retrievedDepartments = departmentService.retrieveAllDepartments();
+        response.getWriter().println(objectMapper.writeValueAsString(retrievedDepartments));
         em.close();
     }
 
@@ -131,32 +108,13 @@ public class DepartmentServlet extends HttpServlet {
         DepartmentServiceImpl departmentService = new DepartmentServiceImpl(em);
         ObjectMapper objectMapper = new ObjectMapper();
 
-        //Determine method, retrieve and respond
-        switch(request.getParameter("method")) {
-            case "id":
-                String id = request.getParameter("id");
-                departmentService.deleteDepartmentByID(Integer.parseInt(id));
-                response.getWriter().println("Deleted by id");
-                break;
-            case "department":
-                String json = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-                Department department = objectMapper.readValue(json, Department.class);
-                departmentService.deleteDepartment(department);
-                response.getWriter().println("Deleted by name");
-                break;
-            default:
-                System.out.println("Non existent method");
-                break;
-        }
+        String json = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+        Department department = objectMapper.readValue(json, Department.class);
+        departmentService.deleteDepartment(department);
+        response.getWriter().println("Deleted by name");
 
         em.close();
     }
 
-    /*
-    private static String inputStreamToString(InputStream inputStream) {
-        Scanner scanner = new Scanner(inputStream, "UTF-8");
-        return scanner.hasNext() ? scanner.useDelimiter("\\A").next() : "";
-    }
-     */
 
 }
