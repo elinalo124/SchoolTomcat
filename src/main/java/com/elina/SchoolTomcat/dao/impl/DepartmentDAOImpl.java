@@ -1,7 +1,6 @@
 package com.elina.SchoolTomcat.dao.impl;
 
 import com.elina.SchoolTomcat.dao.DepartmentDAO;
-import com.elina.SchoolTomcat.model.Course;
 import com.elina.SchoolTomcat.model.Department;
 
 import javax.persistence.EntityManager;

@@ -2,9 +2,6 @@ package com.elina.SchoolTomcat.dao.impl;
 
 import com.elina.SchoolTomcat.dao.CourseDAO;
 import com.elina.SchoolTomcat.model.Course;
-import com.elina.SchoolTomcat.model.Department;
-import com.elina.SchoolTomcat.model.Student;
-import com.elina.SchoolTomcat.model.Teacher;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -17,8 +14,6 @@ public class CourseDAOImpl implements CourseDAO{
     {
         this.entityManager = entityManager;
     }
-
-
 
     /*-----------------------------CRUD---------------------------------------*/
     /*============CREATE============*/
@@ -51,10 +46,10 @@ public class CourseDAOImpl implements CourseDAO{
     /*============UPDATE============*/
     public void updateElement(Course course)
     {
-        Course courseToUpdate = entityManager.find(Course.class, course.getId());
-        courseToUpdate.setName(course.getName());
-        courseToUpdate.setDescription(course.getDescription());
-        entityManager.merge(courseToUpdate);
+        //Course courseToUpdate = entityManager.find(Course.class, course.getId());
+        //courseToUpdate.setName(course.getName());
+        //courseToUpdate.setDescription(course.getDescription());
+        entityManager.merge(course);
     }
     /*============DELETE============*/
     public void deleteElement(Course course)
@@ -67,21 +62,4 @@ public class CourseDAOImpl implements CourseDAO{
         entityManager.merge(courseToDelete);
     }
 
-    /*============OTHER============*/
-    /*public void setDepartment(Department department, Course course){
-        Course courseToUpdate = entityManager.find(Course.class, course.getId());
-        courseToUpdate.setDepartment(department);
-        entityManager.merge(courseToUpdate);
-    }
-
-    public void setTeacher(Teacher teacher, Course course) {
-    }
-
-    public void addStudent(Student student, Course course)
-    {
-        Course courseToUpdate = entityManager.find(Course.class, id);
-        courseToUpdate.getStudents().add(student);
-    }
-
-     */
 }

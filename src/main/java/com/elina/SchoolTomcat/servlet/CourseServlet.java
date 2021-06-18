@@ -5,6 +5,7 @@ import com.elina.SchoolTomcat.model.Department;
 import com.elina.SchoolTomcat.service.impl.CourseServiceImpl;
 import com.elina.SchoolTomcat.service.impl.DepartmentServiceImpl;
 import com.elina.SchoolTomcat.util.JPAUtil;
+import com.elina.SchoolTomcat.util.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -29,14 +30,14 @@ public class CourseServlet extends HttpServlet {
         ObjectMapper objectMapper = new ObjectMapper();
 
         //Get Object
-        String json = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-        Course course = objectMapper.readValue(json, Course.class);
+        Course course = Utility.getObject(request, objectMapper, Course.class);
 
         //Store object
-        courseService.saveCourse(course);
+        int saveStatus = courseService.saveCourse(course);
         em.close();
 
         //Respond with created object
+        if(saveStatus==1){response.setStatus(201);}
         response.getWriter().println(objectMapper.writeValueAsString(course));
     }
 
@@ -75,8 +76,8 @@ public class CourseServlet extends HttpServlet {
         CourseServiceImpl courseService = new CourseServiceImpl(em);
         ObjectMapper objectMapper = new ObjectMapper();
 
-        String json = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-        Course course = objectMapper.readValue(json, Course.class);
+        Course course = Utility.getObject(request, objectMapper, Course.class);
+
         courseService.updateCourse(course);
         List<Course> retrievedCourses = courseService.retrieveAllCourses();
         response.getWriter().println(objectMapper.writeValueAsString(retrievedCourses));
@@ -90,11 +91,13 @@ public class CourseServlet extends HttpServlet {
         CourseServiceImpl courseService = new CourseServiceImpl(em);
         ObjectMapper objectMapper = new ObjectMapper();
 
-        String json = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-        Course course = objectMapper.readValue(json, Course.class);
+        Course course = Utility.getObject(request, objectMapper, Course.class);
+
         courseService.deleteCourse(course);
         response.getWriter().println("Deleted by name");
 
         em.close();
     }
+
+
 }

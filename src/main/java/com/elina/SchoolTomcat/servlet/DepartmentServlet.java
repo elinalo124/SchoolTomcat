@@ -1,9 +1,9 @@
 package com.elina.SchoolTomcat.servlet;
 
-import com.elina.SchoolTomcat.model.Course;
 import com.elina.SchoolTomcat.model.Department;
 import com.elina.SchoolTomcat.service.impl.DepartmentServiceImpl;
 import com.elina.SchoolTomcat.util.JPAUtil;
+import com.elina.SchoolTomcat.util.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-@WebServlet("/Department")
+@WebServlet("/Department/*")
 public class DepartmentServlet extends HttpServlet {
 
     /*
@@ -29,13 +29,6 @@ public class DepartmentServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-    /*
-    private static Object getObject(HttpServletRequest request, ObjectMapper objectMapper) throws IOException {
-        String json = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-        return objectMapper.readValue(json, Object.class);
-    }
-
-     */
 
     @Override //CREATE
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -44,16 +37,14 @@ public class DepartmentServlet extends HttpServlet {
         DepartmentServiceImpl departmentService = new DepartmentServiceImpl(em);
         ObjectMapper objectMapper = new ObjectMapper();
 
-        //Get Object
-        String json = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-        Department department = objectMapper.readValue(json, Department.class);
+        Department department = Utility.getObject(request,objectMapper, Department.class);
 
-        //Department department = (Department) getObject(request,objectMapper);
         //Store object
-        int status=departmentService.saveDepartment(department);
+        int saveStatus =departmentService.saveDepartment(department);
         em.close();
 
         //Respond with created object
+        if(saveStatus==1){response.setStatus(201);}
         response.getWriter().println(objectMapper.writeValueAsString(department));
     }
 
@@ -93,9 +84,10 @@ public class DepartmentServlet extends HttpServlet {
         DepartmentServiceImpl departmentService = new DepartmentServiceImpl(em);
         ObjectMapper objectMapper = new ObjectMapper();
 
-        String json = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-        Department department = objectMapper.readValue(json, Department.class);
-        int status1 = departmentService.updateDepartment(department);
+        Department department = Utility.getObject(request,objectMapper, Department.class);
+
+        departmentService.updateDepartment(department);
+
         List<Department> retrievedDepartments = departmentService.retrieveAllDepartments();
         response.getWriter().println(objectMapper.writeValueAsString(retrievedDepartments));
         em.close();
@@ -108,13 +100,12 @@ public class DepartmentServlet extends HttpServlet {
         DepartmentServiceImpl departmentService = new DepartmentServiceImpl(em);
         ObjectMapper objectMapper = new ObjectMapper();
 
-        String json = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-        Department department = objectMapper.readValue(json, Department.class);
+        Department department = Utility.getObject(request,objectMapper, Department.class);
+
         departmentService.deleteDepartment(department);
         response.getWriter().println("Deleted by name");
 
         em.close();
     }
-
 
 }

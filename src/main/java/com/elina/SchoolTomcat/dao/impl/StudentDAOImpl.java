@@ -1,8 +1,6 @@
 package com.elina.SchoolTomcat.dao.impl;
 
 import com.elina.SchoolTomcat.dao.StudentDAO;
-import com.elina.SchoolTomcat.model.Course;
-import com.elina.SchoolTomcat.model.Department;
 import com.elina.SchoolTomcat.model.Student;
 
 import javax.persistence.EntityManager;
@@ -52,11 +50,11 @@ public class StudentDAOImpl implements StudentDAO{
 
     public void updateElement(Student student)
     {
-        Student studentToUpdate = entityManager.find(Student.class, student.getId());
-        studentToUpdate.setFirstName(student.getFirstName());
-        studentToUpdate.setLastName(student.getLastName());
-        studentToUpdate.setMajor(student.getMajor());
-        entityManager.merge(studentToUpdate);
+        //Student studentToUpdate = entityManager.find(Student.class, student.getId());
+        //studentToUpdate.setFirstName(student.getFirstName());
+        //studentToUpdate.setLastName(student.getLastName());
+        //studentToUpdate.setMajor(student.getMajor());
+        entityManager.merge(student);
     }
 
     /*============DELETE============*/

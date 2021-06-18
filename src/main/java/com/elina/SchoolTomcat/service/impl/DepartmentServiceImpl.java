@@ -1,5 +1,9 @@
 package com.elina.SchoolTomcat.service.impl;
 
+import com.elina.SchoolTomcat.dao.CourseDAO;
+import com.elina.SchoolTomcat.dao.DepartmentDAO;
+import com.elina.SchoolTomcat.dao.StudentDAO;
+import com.elina.SchoolTomcat.dao.TeacherDAO;
 import com.elina.SchoolTomcat.dao.impl.CourseDAOImpl;
 import com.elina.SchoolTomcat.dao.impl.DepartmentDAOImpl;
 import com.elina.SchoolTomcat.dao.impl.StudentDAOImpl;
@@ -16,17 +20,13 @@ import java.util.Optional;
 public class DepartmentServiceImpl implements DepartmentService {
 
     private EntityManager em;
-    private CourseDAOImpl courseDAOImpl;
-    private DepartmentDAOImpl departmentDAOImpl;
-    private StudentDAOImpl studentDAOImpl;
-    private TeacherDAOImpl teacherDAOImpl;
+    private CourseDAO courseDAOImpl;
+    private DepartmentDAO departmentDAOImpl;
 
     public DepartmentServiceImpl(EntityManager em) {
         this.em=em;
         courseDAOImpl = new CourseDAOImpl(em);
         departmentDAOImpl = new DepartmentDAOImpl(em);
-        studentDAOImpl = new StudentDAOImpl(em);
-        teacherDAOImpl = new TeacherDAOImpl(em);
     }
 
     /*-----CREATE-----*/
@@ -79,18 +79,16 @@ public class DepartmentServiceImpl implements DepartmentService {
 
 
     /*-----UPDATE-----*/
-    public int updateDepartment(Department department) //knows db's id, updates name
+    public void updateDepartment(Department department) //knows db's id, updates name
     {
         begin();
         try{
             departmentDAOImpl.updateElement(department);
             end();
-            return 1;
         }catch(PersistenceException exc){
             em.getTransaction().rollback();
             throw exc;
         }
-
     }
 
     /*-----DELETE-----*/
@@ -113,37 +111,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         }
     }
 
-    /*
-    public void deleteDepartmentByID(int id)
-    {
-        begin();
-        try{
-            Department retrievedDepartment = departmentDAOImpl.retrieveElementByID(id).get();
-            for(Course course:retrievedDepartment.getCourses())
-            {
-                courseDAOImpl.deleteElement(course);
-            }
-            departmentDAOImpl.deleteElement(retrievedDepartment);
-            end();
-        }catch(PersistenceException exc){
-            em.getTransaction().rollback();
-            throw exc;
-        }
-    }
-    /*-----OTHER-----*/
-    /*
-    public void addCourse(Integer department_id, Course course)
-    {
-        begin();
-        try{
-            departmentDAOImpl.addCourse(department_id,course);
-            courseDAOImpl.setDepartment(department_id,course);
-            end();
-        }catch(PersistenceException exc){
-            em.getTransaction().rollback();
-            throw exc;
-        }
-    }
+
 
     /*-----HELPER METHODS-----*/
     private void begin()

@@ -1,5 +1,9 @@
 package com.elina.SchoolTomcat.service.impl;
 
+import com.elina.SchoolTomcat.dao.CourseDAO;
+import com.elina.SchoolTomcat.dao.DepartmentDAO;
+import com.elina.SchoolTomcat.dao.StudentDAO;
+import com.elina.SchoolTomcat.dao.TeacherDAO;
 import com.elina.SchoolTomcat.dao.impl.CourseDAOImpl;
 import com.elina.SchoolTomcat.dao.impl.DepartmentDAOImpl;
 import com.elina.SchoolTomcat.dao.impl.StudentDAOImpl;
@@ -18,10 +22,10 @@ import java.util.Optional;
 public class CourseServiceImpl implements CourseService {
 
     private EntityManager em;
-    private CourseDAOImpl courseDAOImpl;
-    private DepartmentDAOImpl departmentDAOImpl;
-    private StudentDAOImpl studentDAOImpl;
-    private TeacherDAOImpl teacherDAOImpl;
+    private CourseDAO courseDAOImpl;
+    private DepartmentDAO departmentDAOImpl;
+    private StudentDAO studentDAOImpl;
+    private TeacherDAO teacherDAOImpl;
 
     public CourseServiceImpl(EntityManager em) {
         this.em=em;
@@ -32,7 +36,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     /*-----CREATE-----*/
-    public void saveCourse(Course course)
+    public int saveCourse(Course course)
     {
         begin();
         try{
@@ -69,6 +73,7 @@ public class CourseServiceImpl implements CourseService {
             }
 
             end();
+            return 1;
         }catch(PersistenceException exc){
             em.getTransaction().rollback();
             throw exc;
@@ -139,20 +144,6 @@ public class CourseServiceImpl implements CourseService {
         }
     }
 
-    /*-----OTHER-----*/
-    /*
-    public void addStudent(int id, Student student)
-    {
-        begin();
-        try{
-            courseDAOImpl.addStudent(id,student);
-            end();
-        }catch(PersistenceException exc){
-            em.getTransaction().rollback();
-            throw exc;
-        }
-
-    }
 
     /*-----HELPER METHODS-----*/
     private void begin()

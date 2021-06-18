@@ -1,6 +1,8 @@
 package com.elina.SchoolTomcat.service.impl;
 
 import com.elina.SchoolTomcat.dao.CourseDAO;
+import com.elina.SchoolTomcat.dao.DepartmentDAO;
+import com.elina.SchoolTomcat.dao.StudentDAO;
 import com.elina.SchoolTomcat.dao.TeacherDAO;
 import com.elina.SchoolTomcat.dao.impl.CourseDAOImpl;
 import com.elina.SchoolTomcat.dao.impl.DepartmentDAOImpl;
@@ -20,21 +22,17 @@ import java.util.Optional;
 public class TeacherServiceImpl implements TeacherService {
 
     private EntityManager em;
-    private CourseDAOImpl courseDAOImpl;
-    private DepartmentDAOImpl departmentDAOImpl;
-    private StudentDAOImpl studentDAOImpl;
-    private TeacherDAOImpl teacherDAOImpl;
+    private CourseDAO courseDAOImpl;
+    private TeacherDAO teacherDAOImpl;
 
     public TeacherServiceImpl(EntityManager em) {
         this.em=em;
         courseDAOImpl = new CourseDAOImpl(em);
-        departmentDAOImpl = new DepartmentDAOImpl(em);
-        studentDAOImpl = new StudentDAOImpl(em);
         teacherDAOImpl = new TeacherDAOImpl(em);
     }
 
     /*-----CREATE-----*/
-    public void saveTeacher(Teacher teacher)
+    public int saveTeacher(Teacher teacher)
     {
         begin();
         try{
@@ -48,8 +46,8 @@ public class TeacherServiceImpl implements TeacherService {
                 retrievedCourse.setTeacher(savedTeacher);
                 courseDAOImpl.updateElement(retrievedCourse);
             }
-
             end();
+            return 1;
         }catch(PersistenceException exc){
             em.getTransaction().rollback();
             throw exc;

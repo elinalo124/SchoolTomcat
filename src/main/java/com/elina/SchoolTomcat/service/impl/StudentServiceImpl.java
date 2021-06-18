@@ -1,11 +1,14 @@
 package com.elina.SchoolTomcat.service.impl;
 
+import com.elina.SchoolTomcat.dao.CourseDAO;
+import com.elina.SchoolTomcat.dao.DepartmentDAO;
+import com.elina.SchoolTomcat.dao.StudentDAO;
+import com.elina.SchoolTomcat.dao.TeacherDAO;
 import com.elina.SchoolTomcat.dao.impl.CourseDAOImpl;
 import com.elina.SchoolTomcat.dao.impl.DepartmentDAOImpl;
 import com.elina.SchoolTomcat.dao.impl.StudentDAOImpl;
 import com.elina.SchoolTomcat.dao.impl.TeacherDAOImpl;
 import com.elina.SchoolTomcat.model.Course;
-import com.elina.SchoolTomcat.model.Department;
 import com.elina.SchoolTomcat.model.Student;
 import com.elina.SchoolTomcat.service.StudentService;
 
@@ -16,19 +19,15 @@ import java.util.Optional;
 
 public class StudentServiceImpl implements StudentService{
     private EntityManager em;
-    private CourseDAOImpl courseDAOImpl;
-    private DepartmentDAOImpl departmentDAOImpl;
-    private StudentDAOImpl studentDAOImpl;
-    private TeacherDAOImpl teacherDAOImpl;
+    private CourseDAO courseDAOImpl;
+    private StudentDAO studentDAOImpl;
     public StudentServiceImpl(EntityManager em) {
         this.em=em;
         courseDAOImpl = new CourseDAOImpl(em);
-        departmentDAOImpl = new DepartmentDAOImpl(em);
         studentDAOImpl = new StudentDAOImpl(em);
-        teacherDAOImpl = new TeacherDAOImpl(em);
     }
     /*-----CREATE-----*/
-    public void saveStudent(Student student)
+    public int saveStudent(Student student)
     {
         begin();
         try{
@@ -44,6 +43,7 @@ public class StudentServiceImpl implements StudentService{
                 courseDAOImpl.updateElement(course);
             }
             end();
+            return 1;
 
         }catch(PersistenceException exc){
             em.getTransaction().rollback();
@@ -90,8 +90,6 @@ public class StudentServiceImpl implements StudentService{
     }
 
 
-
-
     /*-----DELETE-----*/
     public void deleteStudent(Student student)
     {
@@ -107,19 +105,7 @@ public class StudentServiceImpl implements StudentService{
         }
 
     }
-    /*-----OTHER-----*/
-    /*public void changeMajor(Integer id, String major)
-    {
-        begin();
-        try{
-            studentDAOImpl.changeMajor(id, major);
-            end();
-        }catch(PersistenceException exc){
-            em.getTransaction().rollback();
-            throw exc;
-        }
 
-    }
 
     /*-----HELPER METHODS-----*/
     private void begin()

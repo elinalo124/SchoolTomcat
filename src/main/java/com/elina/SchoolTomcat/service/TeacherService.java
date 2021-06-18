@@ -8,12 +8,16 @@ import java.util.Optional;
 public interface TeacherService {
 
     /*-----CREATE-----*/
-    void saveTeacher(Teacher teacher);
+    int saveTeacher(Teacher teacher);
+
     /*-----RETRIEVE-----*/
     List<Teacher> retrieveAllTeachers();
     Optional<Teacher> retrieveTeacherByID (int id);
+    Optional<Teacher> retrieveTeacherByName (String firstName, String lastName);
+
     /*-----UPDATE-----*/
     void updateTeacher(Teacher teacher);
+
     /*-----DELETE-----*/
     void deleteTeacher(Teacher teacher);
 

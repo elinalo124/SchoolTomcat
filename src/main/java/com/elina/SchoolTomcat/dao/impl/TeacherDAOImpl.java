@@ -1,13 +1,10 @@
 package com.elina.SchoolTomcat.dao.impl;
 
 import com.elina.SchoolTomcat.dao.TeacherDAO;
-import com.elina.SchoolTomcat.model.Course;
-import com.elina.SchoolTomcat.model.Student;
 import com.elina.SchoolTomcat.model.Teacher;
 
 import javax.persistence.EntityManager;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public class TeacherDAOImpl implements TeacherDAO {
@@ -52,11 +49,11 @@ public class TeacherDAOImpl implements TeacherDAO {
 
     public void updateElement(Teacher teacher)
     {
-        Teacher teacherToUpdate = entityManager.find(Teacher.class, teacher.getId());
-        teacherToUpdate.setFirstName(teacher.getFirstName());
-        teacherToUpdate.setLastName(teacher.getLastName());
-        teacherToUpdate.setEducation(teacher.getEducation());
-        entityManager.merge(teacherToUpdate);
+        //Teacher teacherToUpdate = entityManager.find(Teacher.class, teacher.getId());
+        //teacherToUpdate.setFirstName(teacher.getFirstName());
+        //teacherToUpdate.setLastName(teacher.getLastName());
+        //teacherToUpdate.setEducation(teacher.getEducation());
+        entityManager.merge(teacher);
     }
 
 

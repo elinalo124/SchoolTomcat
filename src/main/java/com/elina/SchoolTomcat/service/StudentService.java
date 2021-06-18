@@ -9,14 +9,16 @@ import java.util.Optional;
 public interface StudentService {
 
     /*-----CREATE-----*/
-    void saveStudent(Student student);
+    int saveStudent(Student student);
+
     /*-----RETRIEVE-----*/
     List<Student> retrieveAllStudents();
     Optional<Student> retrieveStudentByID (int id);
+    Optional<Student> retrieveStudentByName (String firstName, String lastName);
+
     /*-----UPDATE-----*/
     void updateStudent(Student student);
+
     /*-----DELETE-----*/
     void deleteStudent(Student student);
-    /*-----OTHER-----*/
-    //void changeMajor(Integer id, String major);
 }

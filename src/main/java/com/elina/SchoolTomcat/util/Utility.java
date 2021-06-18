@@ -4,50 +4,26 @@ import com.elina.SchoolTomcat.model.Course;
 import com.elina.SchoolTomcat.model.Department;
 import com.elina.SchoolTomcat.model.Student;
 import com.elina.SchoolTomcat.model.Teacher;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Utility {
 
-    /*
-     static private final String[][] COURSE_DATA = {
-            {"Course 1", "Maths"},
-            {"Course 2", "Physics"},
-             {"Course 3", "Electronics"}
-     };
-    static private final String[][] DEPARTMENT_DATA = {
-            {"Department 1"},
-            {"Department 2"}};
-    static private final String[][] STUDENT_DATA = {
-            {"Elina", "Lo", "Electronic engineering"},
-            {"Elisa", "Lo", "Geophysics"}};
-    static private final String[][] TEACHER_DATA = {
-            {"Mathematician","Eleonora","Lo"},
-            {"Physician","Pepe","Pepito"}};
-
-    public static Department createDepartment(Integer i, List<Integer> courseNums){
-        List<Course> courses = new LinkedList<>();
-        for (Integer courseNum: courseNums){
-            courses.add(createCourse(courseNum));
-        }
-        return new Department(i,DEPARTMENT_DATA[i-1][0],courses);
+    public static <T> T getObject (HttpServletRequest request, ObjectMapper objectMapper, Class<T> type) throws IOException {
+        String json = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+        return objectMapper.readValue(json, type);
     }
 
-    public static Course createCourse(Integer i) {
-        return new Course(i,COURSE_DATA[i-1][0],COURSE_DATA[i-1][1]);
-    }
+    public static <T> List<T> getListOfObjects(HttpServletRequest request, ObjectMapper objectMapper, Class<T[]> type) throws IOException {
+        String json = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+        return Arrays.asList(objectMapper.readValue(json, type));
 
-    public static Student createStudent(Integer i){
-        return new Student(i,STUDENT_DATA[i-1][0],STUDENT_DATA[i-1][1],i,STUDENT_DATA[i-1][2]);
     }
-    public static Teacher createTeacher(Integer i, Integer courseNum){
-        Teacher teacher = new Teacher(i, TEACHER_DATA[i-1][0],createCourse(courseNum));
-        teacher.setFirstName(TEACHER_DATA[i-1][1]);
-        teacher.setLastName(TEACHER_DATA[i-1][2]);
-        return teacher;
-    }
-
-     */
 
 }
