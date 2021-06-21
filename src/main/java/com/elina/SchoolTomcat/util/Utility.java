@@ -25,5 +25,4 @@ public class Utility {
         return Arrays.asList(objectMapper.readValue(json, type));
 
     }
-
 }

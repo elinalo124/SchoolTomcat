@@ -88,8 +88,8 @@ public class DepartmentServlet extends HttpServlet {
 
         departmentService.updateDepartment(department);
 
-        List<Department> retrievedDepartments = departmentService.retrieveAllDepartments();
-        response.getWriter().println(objectMapper.writeValueAsString(retrievedDepartments));
+        //List<Department> retrievedDepartments = departmentService.retrieveAllDepartments();
+        //response.getWriter().println(objectMapper.writeValueAsString(retrievedDepartments));
         em.close();
     }
 

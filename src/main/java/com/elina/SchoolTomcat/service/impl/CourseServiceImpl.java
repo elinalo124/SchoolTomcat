@@ -43,25 +43,20 @@ public class CourseServiceImpl implements CourseService {
             //Save course
             courseDAOImpl.saveElement(course);
 
-
+            /*
             Course savedCourse = courseDAOImpl.retrieveElementByName(course.getName()).get();
-
-
             //Update department with new course
             if(course.getDepartment()!=null){
                 Department retrievedDepartment = departmentDAOImpl.retrieveElementByName(course.getDepartment().getName()).get();
                 retrievedDepartment.getCourses().add(savedCourse);
                 departmentDAOImpl.updateElement(retrievedDepartment);
             }
-
             //Update teacher with new course
             if(course.getTeacher()!=null){
                 Teacher retrievedTeacher = teacherDAOImpl.retrieveElementByName(course.getTeacher().getFirstName(), course.getTeacher().getLastName()).get();
                 retrievedTeacher.setCourse(savedCourse);
                 teacherDAOImpl.updateElement(retrievedTeacher);
             }
-
-
             //Update student with new course
             if(course.getTeacher()!=null){
                 for(Student student:course.getStudents())
@@ -71,6 +66,7 @@ public class CourseServiceImpl implements CourseService {
                     studentDAOImpl.updateElement(retrievedStudent);
                 }
             }
+             */
 
             end();
             return 1;
@@ -124,12 +120,13 @@ public class CourseServiceImpl implements CourseService {
     {
         begin();
         try{
-            //Children deletion
+            //Children deletion(The students still exist but wont have this course, the teacher gets deleted)
             Course retrievedCourse = courseDAOImpl.retrieveElementByName(course.getName()).get();
             if(retrievedCourse.getStudents()!=null){
                 for(Student student:retrievedCourse.getStudents())
                 {
-                    studentDAOImpl.deleteElement(student);
+                    student.getCourses().remove(course);
+                    studentDAOImpl.updateElement(student);
                 }
             }
             if(retrievedCourse.getTeacher()!=null){

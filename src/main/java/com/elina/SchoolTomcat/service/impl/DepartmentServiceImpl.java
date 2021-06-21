@@ -10,6 +10,7 @@ import com.elina.SchoolTomcat.dao.impl.StudentDAOImpl;
 import com.elina.SchoolTomcat.dao.impl.TeacherDAOImpl;
 import com.elina.SchoolTomcat.model.Course;
 import com.elina.SchoolTomcat.model.Department;
+import com.elina.SchoolTomcat.model.Student;
 import com.elina.SchoolTomcat.service.DepartmentService;
 
 import javax.persistence.EntityManager;
@@ -22,11 +23,15 @@ public class DepartmentServiceImpl implements DepartmentService {
     private EntityManager em;
     private CourseDAO courseDAOImpl;
     private DepartmentDAO departmentDAOImpl;
+    private StudentDAO studentDAOImpl;
+    private TeacherDAO teacherDAOImpl;
 
     public DepartmentServiceImpl(EntityManager em) {
         this.em=em;
         courseDAOImpl = new CourseDAOImpl(em);
         departmentDAOImpl = new DepartmentDAOImpl(em);
+        studentDAOImpl = new StudentDAOImpl(em);
+        teacherDAOImpl = new TeacherDAOImpl(em);
     }
 
     /*-----CREATE-----*/
@@ -36,8 +41,8 @@ public class DepartmentServiceImpl implements DepartmentService {
         try{
             departmentDAOImpl.saveElement(department);
 
+            /*
             Department savedDepartment = departmentDAOImpl.retrieveElementByName(department.getName()).get();
-
             //Update courses with department
             if(department.getCourses()!=null){
                 for(Course course:department.getCourses())
@@ -47,6 +52,8 @@ public class DepartmentServiceImpl implements DepartmentService {
                     courseDAOImpl.updateElement(retrievedCourse);
                 }
             }
+
+             */
             end();
             return 1;
         }catch(PersistenceException exc){
@@ -96,11 +103,14 @@ public class DepartmentServiceImpl implements DepartmentService {
     {
         begin();
         try{
-            //Children deletion
+            //Children deletion (The course still exists but it has no department)
             Department retrievedDepartment = departmentDAOImpl.retrieveElementByName(department.getName()).get();
-            for(Course course:retrievedDepartment.getCourses())
-            {
-                courseDAOImpl.deleteElement(course);
+            if(retrievedDepartment.getCourses()!=null){
+                for(Course course:retrievedDepartment.getCourses())
+                {
+                    course.setDepartment(null);
+                    courseDAOImpl.updateElement(course);
+                }
             }
             //Department deletion
             departmentDAOImpl.deleteElement(retrievedDepartment);

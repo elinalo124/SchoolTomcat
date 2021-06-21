@@ -22,6 +22,7 @@ import java.util.List;
 @WebServlet("/Other")
 public class OtherServlet extends HttpServlet {
 
+
     @Override //CREATE
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 

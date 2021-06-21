@@ -37,15 +37,15 @@ public class TeacherServiceImpl implements TeacherService {
         begin();
         try{
             teacherDAOImpl.saveElement(teacher);
-
+            /*
             Teacher savedTeacher = teacherDAOImpl.retrieveElementByName(teacher.getFirstName(),teacher.getLastName()).get();
-
             //Update course with new teacher
             if(teacher.getCourse()!=null){
                 Course retrievedCourse = courseDAOImpl.retrieveElementByName(teacher.getCourse().getName()).get();
                 retrievedCourse.setTeacher(savedTeacher);
                 courseDAOImpl.updateElement(retrievedCourse);
             }
+             */
             end();
             return 1;
         }catch(PersistenceException exc){

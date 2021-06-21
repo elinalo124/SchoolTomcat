@@ -33,8 +33,8 @@ public class StudentServiceImpl implements StudentService{
         try{
             studentDAOImpl.saveElement(student);
 
+            /*
             Student savedStudent = studentDAOImpl.retrieveElementByName(student.getFirstName(),student.getLastName()).get();
-
             //Update courses with student
             for(Course course:student.getCourses())
             {
@@ -42,6 +42,7 @@ public class StudentServiceImpl implements StudentService{
                 retrievedCourse.getStudents().add(savedStudent);
                 courseDAOImpl.updateElement(course);
             }
+             */
             end();
             return 1;
 
