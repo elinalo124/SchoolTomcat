@@ -28,7 +28,7 @@ public class CourseDAOImpl implements CourseDAO{
     /*============RETRIEVE============*/
     public List<Course> retrieveAllElements()
     {
-        return entityManager.createQuery("from Course").getResultList();
+        return entityManager.createQuery("SELECT c FROM Course c WHERE c.deletedFlag = :false").getResultList();
     }
     public Optional<Course> retrieveElementByID(int course_id)
     {

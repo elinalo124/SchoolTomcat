@@ -29,7 +29,7 @@ public class StudentDAOImpl implements StudentDAO{
     /*============RETRIEVE============*/
     public List<Student> retrieveAllElements()
     {
-        return entityManager.createQuery("from Student").getResultList();
+        return entityManager.createQuery("SELECT s FROM Student s WHERE s.deletedFlag = :false").getResultList();
     }
 
     public Optional<Student> retrieveElementByID(int student_id)

@@ -28,7 +28,7 @@ public class TeacherDAOImpl implements TeacherDAO {
     /*============RETRIEVE============*/
     public List<Teacher> retrieveAllElements()
     {
-        return entityManager.createQuery("from Teacher").getResultList();
+        return entityManager.createQuery("SELECT t FROM Teacher t WHERE t.deletedFlag = :false").getResultList();
     }
 
     public Optional<Teacher> retrieveElementByID(int teacher_id)

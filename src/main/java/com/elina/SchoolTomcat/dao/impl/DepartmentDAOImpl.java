@@ -32,7 +32,8 @@ public class DepartmentDAOImpl implements DepartmentDAO {
     /*============RETRIEVE============*/
     public List<Department> retrieveAllElements()
     {
-        return entityManager.createQuery("from Department").getResultList();
+        return entityManager.createQuery("SELECT d FROM Department d WHERE d.deletedFlag = :false").getResultList();
+
     }
 
     public Optional<Department> retrieveElementByID(int department_id)
