@@ -1,8 +1,10 @@
-package com.elina.SchoolTomcat.servlet;
+package com.elina.SchoolTomcat.servletREST;
 
+import com.elina.SchoolTomcat.filter.FilterAux;
 import com.elina.SchoolTomcat.model.Course;
 import com.elina.SchoolTomcat.model.Department;
 import com.elina.SchoolTomcat.service.CourseService;
+import com.elina.SchoolTomcat.service.DepartmentService;
 import com.elina.SchoolTomcat.service.OtherService;
 import com.elina.SchoolTomcat.service.impl.CourseServiceImpl;
 import com.elina.SchoolTomcat.service.impl.DepartmentServiceImpl;
@@ -27,19 +29,33 @@ public class DepartmentsServlet extends HttpServlet {
     /*CREATE
     /departments            creates new department
     /departments/1          error
-    /department/1/course    create a new course for department 1 add it if it does not exist
+    /departments/1/course   adds course to department 1
     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
-        DepartmentServiceImpl departmentService = new DepartmentServiceImpl(em);
+        DepartmentService departmentService = new DepartmentServiceImpl(em);
         ObjectMapper objectMapper = new ObjectMapper();
 
-        String pathInfo = request.getPathInfo(); //Does not take departments into consideration
-        System.out.println("PATH READ "+pathInfo);
+        String pathInfo = request.getPathInfo();
+        FilterAux filterAux = new FilterAux(pathInfo);
 
-        /*---/departments---*/
+        switch (filterAux.getMethod()){
+            case "Method 1":
+                Department department = Utility.getObject(request,objectMapper, Department.class);
+                int saveStatus =departmentService.saveDepartment(department);
+                if(saveStatus==1){response.setStatus(201);}
+                response.getWriter().println(objectMapper.writeValueAsString(department));
+                break;
+            case "Method 2":
+            case "error":
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                break;
+            default:
+                break;
+        }
+        /*
         if(pathInfo==null){
             Department department = Utility.getObject(request,objectMapper, Department.class);
             //Store object
@@ -49,8 +65,6 @@ public class DepartmentsServlet extends HttpServlet {
             if(saveStatus==1){response.setStatus(201);}
             response.getWriter().println(objectMapper.writeValueAsString(department));
         }
-
-        /*---/departments/{id}/course---*/
         else{
             //Check Syntax
             String[] parts = pathInfo.substring(1).split("/");
@@ -70,6 +84,9 @@ public class DepartmentsServlet extends HttpServlet {
             }
             else response.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }
+         */
+
+
     }
 
     /*RETRIEVE
@@ -80,23 +97,26 @@ public class DepartmentsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
-        DepartmentServiceImpl departmentService = new DepartmentServiceImpl(em);
+        DepartmentService departmentService = new DepartmentServiceImpl(em);
         ObjectMapper objectMapper = new ObjectMapper();
 
         String pathInfo = request.getPathInfo();
+        FilterAux filterAux = new FilterAux(pathInfo);
 
-        if(pathInfo==null){
-            List<Department> listDep= departmentService.retrieveAllDepartments();
-            response.getWriter().println(objectMapper.writeValueAsString(listDep));
-        }
-        else{
-            String id = pathInfo.substring(1);
-            if(NumberUtils.isNumber(id)){
-                Department departmentById = departmentService.retrieveDepartmentByID(Integer.parseInt(id)).get();
+        switch (filterAux.getMethod()){
+            case "Method 1":
+                List<Department> listDep= departmentService.retrieveAllDepartments();
+                response.getWriter().println(objectMapper.writeValueAsString(listDep));
+                break;
+            case "Method 2":
+                Department departmentById = departmentService.retrieveDepartmentByID(filterAux.getId()).get();
                 response.getWriter().println(objectMapper.writeValueAsString(departmentById));
-            }
-            else response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-
+                break;
+            case "error":
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                break;
+            default:
+                break;
         }
         em.close();
     }
@@ -108,22 +128,27 @@ public class DepartmentsServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
-        DepartmentServiceImpl departmentService = new DepartmentServiceImpl(em);
+        DepartmentService departmentService = new DepartmentServiceImpl(em);
         ObjectMapper objectMapper = new ObjectMapper();
 
         String pathInfo = request.getPathInfo();
+        FilterAux filterAux = new FilterAux(pathInfo);
 
-        if(pathInfo==null){
-            List<Department> departments = Utility.getListOfObjects(request, objectMapper, Department[].class);
-            for (Department department: departments) departmentService.updateDepartment(department);
-        }
-        else{
-            String id = pathInfo.substring(1);
-            if(NumberUtils.isNumber(id)){
+        switch (filterAux.getMethod()){
+            case "Method 1":
+                List<Department> departments = Utility.getListOfObjects(request, objectMapper, Department[].class);
+                for (Department department: departments) departmentService.updateDepartment(department);
+                break;
+            case "Method 2":
                 Department department = Utility.getObject(request,objectMapper, Department.class);
-                department.setId(Integer.parseInt(id));
+                department.setId(filterAux.getId());
                 departmentService.updateDepartment(department);
-            } else response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                break;
+            case "error":
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                break;
+            default:
+                break;
         }
         em.close();
     }
@@ -136,21 +161,26 @@ public class DepartmentsServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
-        DepartmentServiceImpl departmentService = new DepartmentServiceImpl(em);
+        DepartmentService departmentService = new DepartmentServiceImpl(em);
         ObjectMapper objectMapper = new ObjectMapper();
 
         String pathInfo = request.getPathInfo();
+        FilterAux filterAux = new FilterAux(pathInfo);
 
-        if(pathInfo==null){
-            List<Department> departments = Utility.getListOfObjects(request, objectMapper, Department[].class);
-            for (Department department: departments) departmentService.deleteDepartment(department);
-        }
-        else{
-            String id = pathInfo.substring(1);
-            if(NumberUtils.isNumber(id)){
-                Department departmentById = departmentService.retrieveDepartmentByID(Integer.parseInt(id)).get();
+        switch (filterAux.getMethod()){
+            case "Method 1":
+                List<Department> departments = Utility.getListOfObjects(request, objectMapper, Department[].class);
+                for (Department department: departments) departmentService.deleteDepartment(department);
+                break;
+            case "Method 2":
+                Department departmentById = departmentService.retrieveDepartmentByID(filterAux.getId()).get();
                 departmentService.deleteDepartment(departmentById);
-            } else response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                break;
+            case "error":
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                break;
+            default:
+                break;
         }
         em.close();
     }

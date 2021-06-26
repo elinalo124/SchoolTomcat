@@ -1,6 +1,7 @@
 package com.elina.SchoolTomcat.servlet;
 
 import com.elina.SchoolTomcat.model.Department;
+import com.elina.SchoolTomcat.service.DepartmentService;
 import com.elina.SchoolTomcat.service.impl.DepartmentServiceImpl;
 import com.elina.SchoolTomcat.util.JPAUtil;
 import com.elina.SchoolTomcat.util.Utility;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-@WebServlet("/Department/*")
+@WebServlet("/Department")
 public class DepartmentServlet extends HttpServlet {
 
     /*
@@ -34,7 +35,7 @@ public class DepartmentServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
-        DepartmentServiceImpl departmentService = new DepartmentServiceImpl(em);
+        DepartmentService departmentService = new DepartmentServiceImpl(em);
         ObjectMapper objectMapper = new ObjectMapper();
 
         Department department = Utility.getObject(request,objectMapper, Department.class);
@@ -52,7 +53,7 @@ public class DepartmentServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
-        DepartmentServiceImpl departmentService = new DepartmentServiceImpl(em);
+        DepartmentService departmentService = new DepartmentServiceImpl(em);
         ObjectMapper objectMapper = new ObjectMapper();
 
         //Determine method, retrieve and respond
@@ -81,7 +82,7 @@ public class DepartmentServlet extends HttpServlet {
     @Override //UPDATE
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
-        DepartmentServiceImpl departmentService = new DepartmentServiceImpl(em);
+        DepartmentService departmentService = new DepartmentServiceImpl(em);
         ObjectMapper objectMapper = new ObjectMapper();
 
         Department department = Utility.getObject(request,objectMapper, Department.class);
@@ -97,7 +98,7 @@ public class DepartmentServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
-        DepartmentServiceImpl departmentService = new DepartmentServiceImpl(em);
+        DepartmentService departmentService = new DepartmentServiceImpl(em);
         ObjectMapper objectMapper = new ObjectMapper();
 
         Department department = Utility.getObject(request,objectMapper, Department.class);
